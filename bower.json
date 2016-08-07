@@ -1,0 +1,19 @@
+{
+    "name": "backbone-router-handler",
+    "homepage": "https://github.com/DasRed/js-backbone-router-handler",
+    "main": "Router and Controller handling by config for backbone router.",
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "lodash": "^4.14.1",
+        "backbone": "^1.3.3",
+        "backbone-prototype-compatibility": "^1.0.0",
+        "backbone-controller": "^1.0.0"
+    }
+}
