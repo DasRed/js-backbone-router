@@ -94,6 +94,8 @@
         var j                      = undefined;
         var routeWithoutParameters = undefined;
 
+        var routesForHistory = [];
+
         // create the routes
         for (var i = 0; i < configsLength; i++) {
             config = configs[i];
@@ -122,11 +124,6 @@
                     name: route.route,
                     parts: undefined
                 });
-
-                if (config.rights !== undefined) {
-                    config.rights = [];
-                    route.rights  = (route.rights || []).concat(config.rights);
-                }
 
                 // define default route
                 if (route.isDefault === true) {
@@ -157,14 +154,28 @@
                 }
 
                 // define route in router
-                this.route(route.route, route.name, this.handleRouteFromConfig.bind(this, config, route));
+                routesForHistory.unshift({
+                    route: route.route,
+                    name: route.name,
+                    callback: this.handleRouteFromConfig.bind(this, config, route)
+                });
                 console.debug('Route "' + route.name + '" (url://' + route.route + ') created.');
             }
         }
 
         // create default
-        this.route('*anything', 'default', this.handleRouteFromConfig.bind(this, defaultConfigRoute.config, defaultConfigRoute.route));
+        routesForHistory.unshift({
+            route: '*anything',
+            name: 'default',
+            callback: this.handleRouteFromConfig.bind(this, defaultConfigRoute.config, defaultConfigRoute.route)
+        });
         console.debug('Default Route "' + defaultConfigRoute.route.name + '" (url://' + defaultConfigRoute.route.route + ') created.');
+
+        // this is required for fancy reverse backbone history route definition
+        routesForHistory.forEach(function (route) {
+            this.route(route.route, route.name, route.callback);
+            console.debug('Route "' + route.name + '" (url://' + route.route + ') defined.');
+        }, this);
 
         console.debug('initialized');
     }
