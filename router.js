@@ -200,11 +200,11 @@
      *
      * @param {Object} config
      * @param {Object} route
-     * @param {*} ... route parameters
+     * @param {...*} [args] route parameters
      * @returns {Router}
      * @see class docs
      */
-    Router.prototype.handleRouteFromConfig = function (config, route) {
+    Router.prototype.handleRouteFromConfig = function (config, route, args) {
         console.debug('navigate to "' + route.name + '" (url://' + route.route + ').');
 
         var parameters = Array.prototype.slice.call(arguments);
