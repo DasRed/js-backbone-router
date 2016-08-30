@@ -221,7 +221,11 @@
             require([
                 config.controller
             ], function (controller) {
-                config.controller = controller;
+            	// by async loading before of this same can it be happen that this is the loaded and created controller
+            	// do not overwrite... use it
+				if (typeof config.controller === 'string') {
+            		config.controller = controller;
+				}
                 self.startController(config, route, parameters);
             });
         }
