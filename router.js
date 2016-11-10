@@ -86,7 +86,6 @@
             throw new Error('No config was defined. Please give the router a routing config with new Router(configs, options).');
         }
 
-        var defaultConfigRoute     = undefined;
         var configsLength          = configs.length;
         var config                 = undefined;
         var routesLength           = undefined;
@@ -127,10 +126,10 @@
 
                 // define default route
                 if (route.isDefault === true) {
-                    if (defaultConfigRoute !== undefined) {
-                        throw new Error('Duplicate default route. First route was "' + defaultConfigRoute.route.name + '" (url://' + defaultConfigRoute.route.route + '). Second default route is "' + route.name + '" (url://' + route.route + ')!');
+                    if (this.defaultRoute !== null) {
+                        throw new Error('Duplicate default route. First route was "' + this.defaultRoute.route.name + '" (url://' + this.defaultRoute.route.route + '). Second default route is "' + route.name + '" (url://' + route.route + ')!');
                     }
-                    defaultConfigRoute = {
+                    this.defaultRoute = {
                         config: config,
                         route: route
                     };
@@ -167,9 +166,9 @@
         routesForHistory.unshift({
             route: '*anything',
             name: 'default',
-            callback: this.handleRouteFromConfig.bind(this, defaultConfigRoute.config, defaultConfigRoute.route)
+            callback: this.handleRouteFromConfig.bind(this, this.defaultRoute.config, this.defaultRoute.route)
         });
-        console.debug('Default Route "' + defaultConfigRoute.route.name + '" (url://' + defaultConfigRoute.route.route + ') created.');
+        console.debug('Default Route "' + this.defaultRoute.route.name + '" (url://' + this.defaultRoute.route.route + ') created.');
 
         // this is required for fancy reverse backbone history route definition
         routesForHistory.forEach(function (route) {
@@ -192,8 +191,26 @@
             enumerable: false,
             configurable: true,
             writable: true
+        },
+
+        /**
+         * @var {{route: {name: String, route: String}, config: Object}}
+         */
+        defaultRoute: {
+            value: null,
+            enumerable: false,
+            configurable: true,
+            writable: true
         }
     });
+
+    /**
+     *
+     * @return {String}
+     */
+    Router.prototype.getDefaultRoutePath = function () {
+        return this.defaultRoute.route.route;
+    };
 
     /**
      * handles the route config
