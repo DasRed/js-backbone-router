@@ -194,6 +194,18 @@
         },
 
         /**
+         * the current route
+         *
+         * @var {Object}
+         */
+        currentRoute: {
+            value: null,
+            enumerable: false,
+            configurable: true,
+            writable: true
+        },
+
+        /**
          * @var {{route: {name: String, route: String}, config: Object}}
          */
         defaultRoute: {
@@ -231,6 +243,7 @@
             parameters.pop();
         }
 
+        var previousCurrentRoute = this.currentRoute;
         // the controller is a string... load it with require js
         if (typeof config.controller === 'string') {
             var self = this;
@@ -243,7 +256,11 @@
 				if (typeof config.controller === 'string') {
             		config.controller = controller;
 				}
-                self.startController(config, route, parameters);
+
+				// current route does not change.
+				if (self.currentRoute === previousCurrentRoute) {
+                    self.startController(config, route, parameters);
+                }
             });
         }
         // controller is not a string load lets start
@@ -263,6 +280,8 @@
      * @returns {Router}
      */
     Router.prototype.startController = function (config, route, parameters) {
+        this.currentRoute = route;
+
         // remove previous controller
         if (this.controller !== null && this.controller !== config.controller) {
             this.controller.removeView(config, route);
