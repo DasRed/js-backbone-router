@@ -6,6 +6,7 @@ This router handler inherits from the BackBone.Router.
 ## Install
 ```
 bower install backbone-router-handler --save
+npm install js-backbone-router-handler --save
 ```
 
 ## Example
